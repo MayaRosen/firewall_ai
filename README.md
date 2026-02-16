@@ -233,14 +233,23 @@ curl -X GET "http://localhost:8000/connection/550e8400-e29b-41d4-a716-4466554400
 - Implement model versioning and A/B testing
 - Add model retraining pipeline
 
-### 4. In-Memory Storage
+### 4. PostgreSQL Database
 
-**Current**: Dictionary-based in-memory storage
-**Production Path**:
-- PostgreSQL/MySQL for policies (ACID compliance)
-- Time-series DB (InfluxDB/TimescaleDB) for connections
-- Redis for caching policy evaluations
-- Consider event sourcing for audit trail
+**Implementation**: Raw SQL with connection pooling via psycopg3
+
+**Why PostgreSQL**:
+- **ACID Compliance**: Critical for security policies - no data loss or corruption
+- **JSONB Support**: Native JSON storage for flexible policy conditions without schema migrations
+- **Performance**: Excellent indexing (B-tree, GIN for JSONB) and query optimization
+- **Reliability**: Proven stability in enterprise environments, robust backup/recovery
+- **Scalability**: Handles high-throughput connection logging with proper indexing
+- **Raw SQL Choice**: Direct control over queries, no ORM overhead, easier performance tuning
+
+**Schema Design**:
+- Policies table with JSONB conditions for flexible rule matching
+- Connections table with foreign key to matched policies
+- Strategic indexes: primary keys, foreign keys, timestamp ranges
+- Auto-update triggers for timestamp management
 
 ### 5. Error Handling Strategy
 
@@ -333,23 +342,25 @@ AI_SCORE_THRESHOLD_ALERT=0.5
 
 ## 🚧 Known Limitations
 
-1. **In-Memory Storage**: Data is lost on restart
-2. **No Authentication**: Production would need API keys/OAuth
-3. **No Rate Limiting**: Should add per-client limits
-4. **Simplified AI**: Mock implementation, not real ML model
-5. **No Scalability Features**: Single instance, no distributed processing
-6. **No Persistence**: Policies and connections not saved to disk
+1. **Mock AI Model**: Currently uses simplified scoring algorithm instead of trained ML model
+2. **No Authentication**: Production requires API keys, OAuth, or JWT authentication
+3. **No Rate Limiting**: Missing per-client request throttling
+4. **Single Instance**: No horizontal scaling or load balancing implemented
+5. **Basic Monitoring**: Limited metrics and observability features
+6. **No Policy Versioning**: Policy changes aren't tracked historically
 
 ## 🔮 Future Enhancements
 
-1. **Database Integration**: PostgreSQL for policies, TimescaleDB for connections
-2. **Real AI Model**: Integrate actual ML model with feature engineering
-3. **Caching Layer**: Redis for policy evaluation caching
-4. **Authentication**: JWT-based API authentication
-5. **Rate Limiting**: Per-client request throttling
-6. **Metrics**: Prometheus integration for monitoring
-7. **Async Processing**: Queue-based architecture for high throughput
-8. **Policy Versioning**: Track policy changes over time
+1. **Real AI Model**: Train actual ML model with feature engineering (packet size, frequency, behavioral patterns)
+2. **Time-Series Optimization**: Consider TimescaleDB for connection log analytics
+3. **Caching Layer**: Redis for policy evaluation caching and rate limiting
+4. **Authentication**: JWT-based API authentication with role-based access control
+5. **Rate Limiting**: Per-client request throttling with token bucket algorithm
+6. **Metrics & Monitoring**: Prometheus + Grafana for real-time observability
+7. **Async Processing**: Message queue (RabbitMQ/Kafka) for high-throughput connection processing
+8. **Policy Versioning**: Audit trail for policy changes with rollback capability
+9. **Horizontal Scaling**: Load balancing with multiple service instances
+10. **Advanced Analytics**: ML-based threat intelligence and pattern detection
 
 ## 📝 License
 
