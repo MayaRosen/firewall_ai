@@ -53,8 +53,8 @@ Connection Request
 
 ### Prerequisites
 
-- Python 3.10 or higher
-- pip package manager
+- Docker
+- Docker Compose
 
 ### Setup Steps
 
@@ -63,47 +63,73 @@ Connection Request
    cd "c:\interview\firewall ai"
    ```
 
-2. **Create a virtual environment (recommended)**
+2. **Start the application**
    ```bash
-   python -m venv venv
+   docker-compose up -d
    ```
 
-3. **Activate the virtual environment**
-   ```bash
-   # Windows
-   .\venv\Scripts\activate
-   
-   # Linux/Mac
-   source venv/bin/activate
-   ```
-
-4. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+That's it! Docker Compose will automatically:
+- Pull required images (PostgreSQL, Python)
+- Build the application container
+- Create and initialize the PostgreSQL database with schema
+- Start both services with proper networking
+- Expose the API on port 8000
 
 ## 🎯 Running the Service
 
-### Development Mode
+### Start Services
 
 ```bash
-# From the project root directory
-python -m app.main
+# Start all services (PostgreSQL + Application)
+docker-compose up -d
 ```
 
-Or using uvicorn directly:
+### View Logs
 
 ```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+# View all logs
+docker-compose logs -f
+
+# View specific service logs
+docker-compose logs -f firewall-ai
+docker-compose logs -f postgres
 ```
 
-The service will start on `http://localhost:8000`
+### Stop Services
+
+```bash
+# Stop and remove containers
+docker-compose down
+
+# Stop and remove containers + volumes (deletes database data)
+docker-compose down -v
+```
+
+### Restart Services
+
+```bash
+# Restart after code changes
+docker-compose restart firewall-ai
+
+# Rebuild and restart
+docker-compose up -d --build
+```
 
 ### Access Interactive Documentation
 
 - **Swagger UI**: http://localhost:8000/docs
 - **ReDoc**: http://localhost:8000/redoc
 - **Health Check**: http://localhost:8000/health
+
+### Verify Installation
+
+```bash
+# Test health endpoint
+curl http://localhost:8000/health
+
+# Expected response:
+# {"status": "healthy", "database": "connected"}
+```
 
 ## 📡 API Documentation
 
@@ -249,22 +275,20 @@ curl -X GET "http://localhost:8000/connection/550e8400-e29b-41d4-a716-4466554400
 ### Running Tests
 
 ```bash
-# Run all tests
-pytest
+# Run all tests inside Docker container
+docker-compose exec firewall-ai pytest -v
 
 # Run with coverage
-pytest --cov=app --cov-report=html
 
 # Run specific test file
-pytest tests/test_services.py
-```
+docker-compose exec firewall-ai pytest tests/test_services.py -v
 
 ### Test Structure
 
-Tests should cover:
+Tests cover:
 - **Unit Tests**: Individual services, policy evaluation logic
-- **Integration Tests**: API endpoints with mocked dependencies
-- **E2E Tests**: Full flow from API to storage
+- **Integration Tests**: API endpoints with database interaction
+- **E2E Tests**: Full flow from API through services to PostgreSQL storage
 
 ## 📁 Project Structure
 
