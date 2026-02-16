@@ -119,6 +119,14 @@ The service will start on `http://localhost:8000`
 
 ## 📡 API Documentation
 
+### Quick Testing
+
+**Postman Collection**: Import [postman_collection.json](postman_collection.json) into Postman for a complete collection of all API endpoints.
+
+**Curl Examples**: See [API_EXAMPLES.md](API_EXAMPLES.md) for comprehensive curl command examples.
+
+**Interactive Docs**: Visit http://localhost:8000/docs to test endpoints directly in your browser.
+
 ### Submit Connection for Evaluation
 
 **POST /connection**

@@ -1,0 +1,355 @@
+{
+	"info": {
+		"_postman_id": "firewall-ai-collection",
+		"name": "AI Firewall API",
+		"description": "Complete API collection for AI Firewall backend service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/health",
+					"host": ["{{base_url}}"],
+					"path": ["health"]
+				},
+				"description": "Check if the service is healthy and running"
+			},
+			"response": []
+		},
+		{
+			"name": "Root",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/",
+					"host": ["{{base_url}}"],
+					"path": [""]
+				},
+				"description": "Get API information and version"
+			},
+			"response": []
+		},
+		{
+			"name": "Policies",
+			"item": [
+				{
+					"name": "Create Policy - Block SSH",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"policy_id\": \"P-001\",\n  \"conditions\": [\n    {\n      \"field\": \"destination_port\",\n      \"operator\": \"=\",\n      \"value\": \"22\"\n    }\n  ],\n  \"action\": \"block\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/policy",
+							"host": ["{{base_url}}"],
+							"path": ["policy"]
+						},
+						"description": "Create a policy that blocks SSH connections (port 22)"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Policy - Allow HTTP/HTTPS",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"policy_id\": \"P-002\",\n  \"conditions\": [\n    {\n      \"field\": \"destination_port\",\n      \"operator\": \"=\",\n      \"value\": \"80\"\n    },\n    {\n      \"field\": \"destination_port\",\n      \"operator\": \"=\",\n      \"value\": \"443\"\n    }\n  ],\n  \"action\": \"allow\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/policy",
+							"host": ["{{base_url}}"],
+							"path": ["policy"]
+						},
+						"description": "Create a policy that allows HTTP (80) or HTTPS (443) traffic"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Policy - Alert on Telnet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"policy_id\": \"P-003\",\n  \"conditions\": [\n    {\n      \"field\": \"destination_port\",\n      \"operator\": \"=\",\n      \"value\": \"23\"\n    }\n  ],\n  \"action\": \"alert\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/policy",
+							"host": ["{{base_url}}"],
+							"path": ["policy"]
+						},
+						"description": "Create a policy that alerts on Telnet connections and uses AI scoring"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Policy - Block Suspicious IP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"policy_id\": \"P-004\",\n  \"conditions\": [\n    {\n      \"field\": \"source_ip\",\n      \"operator\": \"=\",\n      \"value\": \"192.168.1.100\"\n    }\n  ],\n  \"action\": \"block\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/policy",
+							"host": ["{{base_url}}"],
+							"path": ["policy"]
+						},
+						"description": "Create a policy that blocks traffic from a specific suspicious IP"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Policy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/policy/P-001",
+							"host": ["{{base_url}}"],
+							"path": ["policy", "P-001"]
+						},
+						"description": "Retrieve a specific policy by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Policy",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"conditions\": [\n    {\n      \"field\": \"destination_port\",\n      \"operator\": \">\",\n      \"value\": \"1024\"\n    }\n  ],\n  \"action\": \"alert\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/policy/P-001",
+							"host": ["{{base_url}}"],
+							"path": ["policy", "P-001"]
+						},
+						"description": "Update an existing policy with new conditions and action"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Policy",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/policy/P-001",
+							"host": ["{{base_url}}"],
+							"path": ["policy", "P-001"]
+						},
+						"description": "Delete a policy by ID"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Connections",
+			"item": [
+				{
+					"name": "Submit Connection - SSH Attempt",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"source_ip\": \"192.168.1.10\",\n  \"destination_ip\": \"10.0.0.5\",\n  \"destination_port\": 22,\n  \"protocol\": \"TCP\",\n  \"timestamp\": \"2025-04-30T12:34:56Z\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/connection",
+							"host": ["{{base_url}}"],
+							"path": ["connection"]
+						},
+						"description": "Submit an SSH connection attempt for evaluation"
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Connection - HTTPS",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"source_ip\": \"192.168.1.20\",\n  \"destination_ip\": \"10.0.0.10\",\n  \"destination_port\": 443,\n  \"protocol\": \"TCP\",\n  \"timestamp\": \"2025-04-30T12:35:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/connection",
+							"host": ["{{base_url}}"],
+							"path": ["connection"]
+						},
+						"description": "Submit an HTTPS connection for evaluation"
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Connection - Telnet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"source_ip\": \"192.168.1.30\",\n  \"destination_ip\": \"10.0.0.15\",\n  \"destination_port\": 23,\n  \"protocol\": \"TCP\",\n  \"timestamp\": \"2025-04-30T12:36:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/connection",
+							"host": ["{{base_url}}"],
+							"path": ["connection"]
+						},
+						"description": "Submit a Telnet connection that will trigger AI evaluation"
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Connection - Suspicious IP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"source_ip\": \"192.168.1.100\",\n  \"destination_ip\": \"10.0.0.20\",\n  \"destination_port\": 3389,\n  \"protocol\": \"TCP\",\n  \"timestamp\": \"2025-04-30T12:37:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/connection",
+							"host": ["{{base_url}}"],
+							"path": ["connection"]
+						},
+						"description": "Submit a connection from a suspicious IP with high anomaly score"
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Connection - No Policy Match",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"source_ip\": \"192.168.1.50\",\n  \"destination_ip\": \"10.0.0.25\",\n  \"destination_port\": 8080,\n  \"protocol\": \"TCP\",\n  \"timestamp\": \"2025-04-30T12:38:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/connection",
+							"host": ["{{base_url}}"],
+							"path": ["connection"]
+						},
+						"description": "Submit a connection that doesn't match any policy (AI decides)"
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Connection - UDP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"source_ip\": \"192.168.1.60\",\n  \"destination_ip\": \"10.0.0.30\",\n  \"destination_port\": 53,\n  \"protocol\": \"UDP\",\n  \"timestamp\": \"2025-04-30T12:39:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/connection",
+							"host": ["{{base_url}}"],
+							"path": ["connection"]
+						},
+						"description": "Submit a UDP connection (DNS)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Connection Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/connection/{{connection_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["connection", "{{connection_id}}"]
+						},
+						"description": "Retrieve connection details by ID (replace {{connection_id}} with actual ID from submit response)"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "connection_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
