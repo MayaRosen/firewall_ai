@@ -12,6 +12,7 @@ from fastapi.exceptions import RequestValidationError
 
 from app.config import settings
 from app.routes import connection, policy
+from app.database.connection import db_manager
 from app.utils.exceptions import (
     FirewallException,
     PolicyNotFoundException,
@@ -37,12 +38,29 @@ async def lifespan(app: FastAPI):
     # Startup
     logger.info(f"Starting {settings.app_name} v{settings.app_version}")
     logger.info(f"Log level: {settings.log_level}")
+    
+    # Initialize database connection pool
+    try:
+        db_manager.initialize()
+        logger.info("Database connection pool initialized")
+        
+        # Test database connection
+        if db_manager.health_check():
+            logger.info("Database health check passed")
+        else:
+            logger.warning("Database health check failed")
+    except Exception as e:
+        logger.error(f"Failed to initialize database: {e}")
+        raise
+    
     logger.info("All services initialized successfully")
     
     yield
     
     # Shutdown
-    logger.info(f"Shutting down {settings.app_name}")
+    logger.info("Shutting down services...")
+    db_manager.close()
+    logger.info(f"{settings.app_name} shut down complete")
 
 
 # Create FastAPI application

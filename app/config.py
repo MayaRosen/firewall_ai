@@ -33,6 +33,15 @@ class Settings(BaseSettings):
     cors_enabled: bool = True
     cors_origins: list[str] = ["*"]
     
+    # Database
+    db_host: str = "localhost"
+    db_port: int = 5432
+    db_name: str = "firewall_ai"
+    db_user: str = "firewall_user"
+    db_password: str = "firewall_password"
+    db_pool_min_size: int = 2
+    db_pool_max_size: int = 10
+    
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"

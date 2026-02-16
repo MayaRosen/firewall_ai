@@ -187,7 +187,7 @@ class TestConnectionRepository:
             timestamp=datetime.utcnow(),
             decision="block",
             anomaly_score=0.95,
-            matched_policy="P-001",
+            matched_policy=None,
             evaluated_at=datetime.utcnow()
         )
         
@@ -212,7 +212,7 @@ class TestConnectionRepository:
             timestamp=datetime.utcnow(),
             decision="block",  # Changed
             anomaly_score=0.85,  # Changed
-            matched_policy="P-001",  # Changed
+            matched_policy=None,  # Changed
             evaluated_at=datetime.utcnow()
         )
         
