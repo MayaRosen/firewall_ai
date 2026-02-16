@@ -1,6 +1,6 @@
 # AI Firewall Backend Service
 
-A professional, enterprise-grade backend service for an AI-driven network firewall. This service evaluates network connections using rule-based security policies and AI-powered anomaly detection to make real-time security decisions.
+A backend service for an AI-driven network firewall. This service evaluates network connections using rule-based security policies and AI-powered anomaly detection to make real-time security decisions.
 
 ## 📋 Table of Contents
 
@@ -12,18 +12,6 @@ A professional, enterprise-grade backend service for an AI-driven network firewa
 - [Design Decisions](#design-decisions)
 - [Testing](#testing)
 - [Project Structure](#project-structure)
-
-## ✨ Features
-
-- **Policy Management**: Create, update, retrieve, and delete security policies
-- **Real-time Connection Evaluation**: Process network connections and make instant security decisions
-- **AI-Powered Anomaly Detection**: ML-based scoring for suspicious connection patterns
-- **Intelligent Decision Engine**: Combines policy rules with AI insights
-- **RESTful API**: Clean, well-documented HTTP endpoints
-- **Professional Architecture**: Service layer, repository pattern, dependency injection
-- **Comprehensive Error Handling**: Custom exceptions and proper HTTP status codes
-- **Interactive Documentation**: Auto-generated Swagger UI and ReDoc
-- **Health Monitoring**: Built-in health check endpoint
 
 ## 🏗️ Architecture
 
@@ -122,8 +110,6 @@ The service will start on `http://localhost:8000`
 ### Quick Testing
 
 **Postman Collection**: Import [postman_collection.json](postman_collection.json) into Postman for a complete collection of all API endpoints.
-
-**Curl Examples**: See [API_EXAMPLES.md](API_EXAMPLES.md) for comprehensive curl command examples.
 
 **Interactive Docs**: Visit http://localhost:8000/docs to test endpoints directly in your browser.
 
@@ -362,10 +348,4 @@ AI_SCORE_THRESHOLD_ALERT=0.5
 9. **Horizontal Scaling**: Load balancing with multiple service instances
 10. **Advanced Analytics**: ML-based threat intelligence and pattern detection
 
-## 📝 License
 
-This is a prototype assessment project.
-
-## 👤 Author
-
-Developed as part of the AI Firewall Engineering Assessment
